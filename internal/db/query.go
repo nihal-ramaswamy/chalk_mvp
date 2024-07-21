@@ -19,19 +19,19 @@ func insertIntoConference(db *sql.DB, conference *dto.Conference) error {
 	return err
 }
 
-func insertIntoUser(db *sql.DB, user *dto.Student) (string, error) {
+func insertIntoStudent(db *sql.DB, user *dto.Student) (string, error) {
 	if db == nil {
 		panic("db cannot be nil")
 	}
 
 	var id string
-	query := `INSERT INTO "STUDENT" (NAME, EMAIL, PASSWORD, DESCRIPTION, YEAR_OF_GRADUATION, SKILLS, UNIVERSITY) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING ID`
-	err := db.QueryRow(query, user.Name, user.Email, user.Password, user.Description, user.YearOfGraduation, pq.StringArray(user.Skills), user.University).Scan(&id)
+	query := `INSERT INTO "STUDENT" (NAME, EMAIL, PASSWORD, DESCRIPTION, YEAR_OF_GRADUATION, SKILLS, UNIVERSITY, DEGREE) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING ID`
+	err := db.QueryRow(query, user.Name, user.Email, user.Password, user.Description, user.YearOfGraduation, pq.StringArray(user.Skills), user.University, user.Degree).Scan(&id)
 
 	return id, err
 }
 
-func selectAllFromUserWhereEmailIs(db *sql.DB, email string) (dto.Student, error) {
+func selectAllFromStudentWhereEmailIs(db *sql.DB, email string) (dto.Student, error) {
 	if db == nil {
 		panic("db cannot be nil")
 	}
@@ -46,7 +46,7 @@ func selectAllFromUserWhereEmailIs(db *sql.DB, email string) (dto.Student, error
 	return user, err
 }
 
-func selectPasswordFromUserWhereEmailIDs(db *sql.DB, email string) (string, error) {
+func selectPasswordFromStudentWhereEmailIDs(db *sql.DB, email string) (string, error) {
 	if db == nil {
 		panic("db cannot be nil")
 	}
@@ -55,4 +55,26 @@ func selectPasswordFromUserWhereEmailIDs(db *sql.DB, email string) (string, erro
 	err := db.QueryRow(query, email).Scan(&password)
 
 	return password, err
+}
+
+func updateBookmarksSetStudentEmailsArrayAppendWhereEmailIs(db *sql.DB, email string, addBookmark *dto.Bookmark) error {
+	if nil == db {
+		panic("db cannot be nil")
+	}
+
+	query := `UPDATE BOOKMARKS SET STUDENT_EMAILS = ARRAY_APPEND(STUDENT_EMAILS, $2) WHERE EMAIL = $1`
+	err := db.QueryRow(query, email, addBookmark.StudentEmail).Err()
+	return err
+}
+
+func selectStudentEmailsFromBookmarksWhereEmailIs(db *sql.DB, email string) ([]string, error) {
+	if nil == db {
+		panic("db cannot be nil")
+	}
+
+	query := `SELECT STUDENT_EMAILS FROM BOOKMARKS WHERE EMAIL = $1`
+	var bookmarks []string
+	err := db.QueryRow(query, email).Scan(&bookmarks)
+
+	return bookmarks, err
 }

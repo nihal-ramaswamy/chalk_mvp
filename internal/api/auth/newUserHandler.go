@@ -40,8 +40,6 @@ func (n *NewStudentHandler) Handler() gin.HandlerFunc {
 			return
 		}
 
-		n.log.Info("Student: ", zap.Any("student", student))
-
 		if db.DoesEmailExist(n.db, student.Email) {
 			c.JSON(http.StatusBadRequest,
 				gin.H{"error": fmt.Sprintf("User with email %s already exists", student.Email)})

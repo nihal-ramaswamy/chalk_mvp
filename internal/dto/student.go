@@ -8,6 +8,7 @@ type Student struct {
 	Password         string   `json:"password"`
 	Description      string   `json:"description"`
 	University       string   `json:"university"`
+	Degree           string   `json:"degree"`
 	Skills           []string `json:"skills"`
 	YearOfGraduation int      `json:"year_of_graduation"`
 }
