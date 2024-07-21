@@ -37,11 +37,15 @@ func (n *NewStudentHandler) Handler() gin.HandlerFunc {
 			err := c.Error(err)
 			n.log.Info("Responding with error", zap.Error(err))
 			c.AbortWithStatus(http.StatusBadRequest)
+			return
 		}
+
+		n.log.Info("Student: ", zap.Any("student", student))
 
 		if db.DoesEmailExist(n.db, student.Email) {
 			c.JSON(http.StatusBadRequest,
 				gin.H{"error": fmt.Sprintf("User with email %s already exists", student.Email)})
+			return
 		}
 
 		id := db.RegisterNewUser(n.db, student, n.log)

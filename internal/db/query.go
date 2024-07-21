@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 
+	"github.com/lib/pq"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/dto"
 )
 
@@ -24,8 +25,8 @@ func insertIntoUser(db *sql.DB, user *dto.Student) (string, error) {
 	}
 
 	var id string
-	query := `INSERT INTO "USER" (NAME, EMAIL, PASSWORD, DESCRIPTION, YEAR_OF_GRADUATION, SKILLS, UNIVERSITY) VALUES ($1, $2, $3) RETURNING ID`
-	err := db.QueryRow(query, user.Name, user.Email, user.Password, user.Description, user.YearOfGraduation, user.Skills, user.University).Scan(&id)
+	query := `INSERT INTO "STUDENT" (NAME, EMAIL, PASSWORD, DESCRIPTION, YEAR_OF_GRADUATION, SKILLS, UNIVERSITY) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING ID`
+	err := db.QueryRow(query, user.Name, user.Email, user.Password, user.Description, user.YearOfGraduation, pq.StringArray(user.Skills), user.University).Scan(&id)
 
 	return id, err
 }
@@ -36,7 +37,7 @@ func selectAllFromUserWhereEmailIs(db *sql.DB, email string) (dto.Student, error
 	}
 
 	var user dto.Student
-	query := `SELECT * FROM "USER" WHERE EMAIL = $1`
+	query := `SELECT * FROM "STUDENT" WHERE EMAIL = $1`
 	err := db.QueryRow(query, email).Scan(&user)
 	if err != nil {
 		return user, err
@@ -50,7 +51,7 @@ func selectPasswordFromUserWhereEmailIDs(db *sql.DB, email string) (string, erro
 		panic("db cannot be nil")
 	}
 	var password string
-	query := `SELECT PASSWORD FROM "USER" WHERE EMAIL = $1`
+	query := `SELECT PASSWORD FROM "STUDENT" WHERE EMAIL = $1`
 	err := db.QueryRow(query, email).Scan(&password)
 
 	return password, err
