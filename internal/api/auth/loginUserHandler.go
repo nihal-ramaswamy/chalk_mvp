@@ -43,7 +43,7 @@ func (*LoginUserHandler) RequestMethod() string {
 
 func (l *LoginUserHandler) Handler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user := dto.NewUser()
+		user := dto.NewStudent()
 		if err := c.ShouldBindJSON(&user); nil != err {
 			err := c.Error(err)
 			l.log.Info("Responding with error", zap.Error(err))

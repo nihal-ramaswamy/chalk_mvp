@@ -17,7 +17,7 @@ func DoesEmailExist(db *sql.DB, email string) bool {
 	return err != sql.ErrNoRows
 }
 
-func RegisterNewUser(db *sql.DB, user *dto.User, log *zap.Logger) string {
+func RegisterNewUser(db *sql.DB, user *dto.Student, log *zap.Logger) string {
 	user = user.HashAndSalt()
 
 	id, err := insertIntoUser(db, user)
@@ -28,7 +28,7 @@ func RegisterNewUser(db *sql.DB, user *dto.User, log *zap.Logger) string {
 	return id
 }
 
-func DoesPasswordMatch(db *sql.DB, user *dto.User, log *zap.Logger) bool {
+func DoesPasswordMatch(db *sql.DB, user *dto.Student, log *zap.Logger) bool {
 	password, err := selectPasswordFromUserWhereEmailIDs(db, user.Email)
 
 	if nil != err {
@@ -39,6 +39,6 @@ func DoesPasswordMatch(db *sql.DB, user *dto.User, log *zap.Logger) bool {
 	return bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password)) == nil
 }
 
-func GetUserFromEmail(db *sql.DB, email string) (dto.User, error) {
+func GetUserFromEmail(db *sql.DB, email string) (dto.Student, error) {
 	return selectAllFromUserWhereEmailIs(db, email)
 }

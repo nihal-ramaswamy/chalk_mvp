@@ -8,7 +8,7 @@ import (
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/dto"
 )
 
-func GenerateToken(user *dto.User) (string, error) {
+func GenerateToken(user *dto.Student) (string, error) {
 	secret := GetDotEnvVariable("SECRET_KEY")
 
 	signingKey := []byte(secret)

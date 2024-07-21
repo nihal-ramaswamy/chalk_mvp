@@ -18,24 +18,24 @@ func insertIntoConference(db *sql.DB, conference *dto.Conference) error {
 	return err
 }
 
-func insertIntoUser(db *sql.DB, user *dto.User) (string, error) {
+func insertIntoUser(db *sql.DB, user *dto.Student) (string, error) {
 	if db == nil {
 		panic("db cannot be nil")
 	}
 
 	var id string
-	query := `INSERT INTO "USER" (NAME, EMAIL, PASSWORD) VALUES ($1, $2, $3) RETURNING ID`
-	err := db.QueryRow(query, user.Name, user.Email, user.Password).Scan(&id)
+	query := `INSERT INTO "USER" (NAME, EMAIL, PASSWORD, DESCRIPTION, YEAR_OF_GRADUATION, SKILLS, UNIVERSITY) VALUES ($1, $2, $3) RETURNING ID`
+	err := db.QueryRow(query, user.Name, user.Email, user.Password, user.Description, user.YearOfGraduation, user.Skills, user.University).Scan(&id)
 
 	return id, err
 }
 
-func selectAllFromUserWhereEmailIs(db *sql.DB, email string) (dto.User, error) {
+func selectAllFromUserWhereEmailIs(db *sql.DB, email string) (dto.Student, error) {
 	if db == nil {
 		panic("db cannot be nil")
 	}
 
-	var user dto.User
+	var user dto.Student
 	query := `SELECT * FROM "USER" WHERE EMAIL = $1`
 	err := db.QueryRow(query, email).Scan(&user)
 	if err != nil {

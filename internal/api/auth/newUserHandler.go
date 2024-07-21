@@ -12,48 +12,48 @@ import (
 	"go.uber.org/zap"
 )
 
-type NewUserHandler struct {
+type NewStudentHandler struct {
 	db          *sql.DB
 	log         *zap.Logger
 	middlewares []gin.HandlerFunc
 }
 
-func NewNewUserHandler(db *sql.DB, log *zap.Logger) *NewUserHandler {
-	return &NewUserHandler{
+func NewNewUserHandler(db *sql.DB, log *zap.Logger) *NewStudentHandler {
+	return &NewStudentHandler{
 		db:  db,
 		log: log,
 	}
 }
 
-func (*NewUserHandler) Pattern() string {
+func (*NewStudentHandler) Pattern() string {
 	return "/register"
 }
 
-func (n *NewUserHandler) Handler() gin.HandlerFunc {
+func (n *NewStudentHandler) Handler() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user := dto.NewUser()
+		student := dto.NewStudent()
 
-		if err := c.ShouldBindJSON(&user); err != nil {
+		if err := c.ShouldBindJSON(&student); err != nil {
 			err := c.Error(err)
 			n.log.Info("Responding with error", zap.Error(err))
 			c.AbortWithStatus(http.StatusBadRequest)
 		}
 
-		if db.DoesEmailExist(n.db, user.Email) {
+		if db.DoesEmailExist(n.db, student.Email) {
 			c.JSON(http.StatusBadRequest,
-				gin.H{"error": fmt.Sprintf("User with email %s already exists", user.Email)})
+				gin.H{"error": fmt.Sprintf("User with email %s already exists", student.Email)})
 		}
 
-		id := db.RegisterNewUser(n.db, user, n.log)
+		id := db.RegisterNewUser(n.db, student, n.log)
 
 		c.JSON(http.StatusAccepted, gin.H{"id": id})
 	}
 }
 
-func (*NewUserHandler) RequestMethod() string {
+func (*NewStudentHandler) RequestMethod() string {
 	return constants.POST
 }
 
-func (n *NewUserHandler) Middlewares() []gin.HandlerFunc {
+func (n *NewStudentHandler) Middlewares() []gin.HandlerFunc {
 	return n.middlewares
 }
