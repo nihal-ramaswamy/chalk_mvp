@@ -41,14 +41,14 @@ func (n *NewStudentHandler) Handler() gin.HandlerFunc {
 		}
 
 		if db.DoesEmailExist(n.db, student.Email) {
-			c.JSON(http.StatusBadRequest,
+			c.JSON(http.StatusUnprocessableEntity,
 				gin.H{"error": fmt.Sprintf("User with email %s already exists", student.Email)})
 			return
 		}
 
 		id := db.RegisterNewUser(n.db, student, n.log)
 
-		c.JSON(http.StatusAccepted, gin.H{"id": id})
+		c.JSON(http.StatusCreated, gin.H{"id": id})
 	}
 }
 
