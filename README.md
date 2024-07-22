@@ -56,11 +56,11 @@
     "name": "string",               
     "email": "string",              
     "password": "string",           
-    "description"?: "string",        
-    "university"?: "string",         
-    "degree"?: "string",             
-    "skills"?: "string",             
-    "year_of_graduation"?: "string"
+    "description?": "string",        
+    "university?": "string",         
+    "degree?": "string",             
+    "skills?": "string",             
+    "year_of_graduation?": "string"
   }
 ```
 </details>
