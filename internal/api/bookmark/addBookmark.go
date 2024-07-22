@@ -46,7 +46,14 @@ func (n *AddBookmarkHandler) Handler() gin.HandlerFunc {
 
 		n.log.Info("Debug: ", zap.String("email", email), zap.Any("bookmark ", addBookmarkStruct))
 
-		db.AppendEmailToBookmarks(n.db, email, addBookmarkStruct)
+		if err := db.AppendEmailToBookmarks(n.db, email, addBookmarkStruct); nil != err {
+			err := c.Error(err)
+			n.log.Info("Responding with error", zap.Error(err))
+			c.AbortWithStatus(http.StatusBadRequest)
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": "Added bookmark"})
 	}
 }
 
