@@ -10,32 +10,35 @@ import (
 	"go.uber.org/zap"
 )
 
-type AuthGroup struct {
+type BookmarkGroup struct {
 	routeHandlers []interfaces.HandlerInterface
 	middlewares   []gin.HandlerFunc
 }
 
-func (*AuthGroup) Group() string {
+func (*BookmarkGroup) Group() string {
 	return "/bookmark"
 }
 
-func (h *AuthGroup) RouteHandlers() []interfaces.HandlerInterface {
+func (h *BookmarkGroup) RouteHandlers() []interfaces.HandlerInterface {
 	return h.routeHandlers
 }
 
-func NewAuthGroup(db *sql.DB, rdb *redis.Client, ctx context.Context, log *zap.Logger) *AuthGroup {
-	handlers := []interfaces.HandlerInterface{}
+func NewBookmarkGroup(db *sql.DB, rdb *redis.Client, ctx context.Context, log *zap.Logger) *BookmarkGroup {
+	handlers := []interfaces.HandlerInterface{
+		NewViewBookmarkHandler(db, rdb, ctx, log),
+		NewAddBookmarkHandler(db, rdb, ctx, log),
+	}
 
-	return &AuthGroup{
+	return &BookmarkGroup{
 		routeHandlers: handlers,
 		middlewares:   []gin.HandlerFunc{},
 	}
 }
 
-func (*AuthGroup) AuthRequired() bool {
-	return false
+func (*BookmarkGroup) AuthRequired() bool {
+	return true
 }
 
-func (a *AuthGroup) Middlewares() []gin.HandlerFunc {
+func (a *BookmarkGroup) Middlewares() []gin.HandlerFunc {
 	return a.middlewares
 }

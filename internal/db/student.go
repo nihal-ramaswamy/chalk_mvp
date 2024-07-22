@@ -2,22 +2,45 @@ package db
 
 import (
 	"database/sql"
-	"errors"
 
 	"github.com/lib/pq"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/dto"
+	"go.uber.org/zap"
+	"golang.org/x/crypto/bcrypt"
 )
 
-func insertIntoConference(db *sql.DB, conference *dto.Conference) error {
-	if nil == db {
-		return errors.New("sql db nil")
+func DoesEmailExist(db *sql.DB, email string) bool {
+	_, err := selectAllFromStudentWhereEmailIs(db, email)
+	return err != sql.ErrNoRows
+}
+
+func RegisterNewUser(db *sql.DB, user *dto.Student, log *zap.Logger) string {
+	user = user.HashAndSalt()
+
+	id, err := insertIntoStudent(db, user)
+	if err != nil {
+		log.Error(err.Error())
 	}
 
-	query := `INSERT INTO "CONFERENCE" (CODE, ADMIN, ACTIVE) VALUES ($1, $2, $3)`
-	err := db.QueryRow(query, conference.Code, conference.Admin, conference.Active).Err()
-
-	return err
+	return id
 }
+
+func DoesPasswordMatch(db *sql.DB, user *dto.Student, log *zap.Logger) bool {
+	password, err := selectPasswordFromStudentWhereEmailIDs(db, user.Email)
+
+	if nil != err {
+		log.Error(err.Error())
+		return false
+	}
+
+	return bcrypt.CompareHashAndPassword([]byte(password), []byte(user.Password)) == nil
+}
+
+func GetUserFromEmail(db *sql.DB, email string) (dto.Student, error) {
+	return selectAllFromStudentWhereEmailIs(db, email)
+}
+
+// -----Queries -----
 
 func insertIntoStudent(db *sql.DB, user *dto.Student) (string, error) {
 	if db == nil {
@@ -55,26 +78,4 @@ func selectPasswordFromStudentWhereEmailIDs(db *sql.DB, email string) (string, e
 	err := db.QueryRow(query, email).Scan(&password)
 
 	return password, err
-}
-
-func updateBookmarksSetStudentEmailsArrayAppendWhereEmailIs(db *sql.DB, email string, addBookmark *dto.Bookmark) error {
-	if nil == db {
-		panic("db cannot be nil")
-	}
-
-	query := `UPDATE BOOKMARKS SET STUDENT_EMAILS = ARRAY_APPEND(STUDENT_EMAILS, $2) WHERE EMAIL = $1`
-	err := db.QueryRow(query, email, addBookmark.StudentEmail).Err()
-	return err
-}
-
-func selectStudentEmailsFromBookmarksWhereEmailIs(db *sql.DB, email string) ([]string, error) {
-	if nil == db {
-		panic("db cannot be nil")
-	}
-
-	query := `SELECT STUDENT_EMAILS FROM BOOKMARKS WHERE EMAIL = $1`
-	var bookmarks []string
-	err := db.QueryRow(query, email).Scan(&bookmarks)
-
-	return bookmarks, err
 }

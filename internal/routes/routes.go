@@ -5,13 +5,10 @@ import (
 	"database/sql"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 	auth_api "github.com/nihal-ramaswamy/chalk_mvp/internal/api/auth"
-	chat_api "github.com/nihal-ramaswamy/chalk_mvp/internal/api/chat"
+	bookmark_api "github.com/nihal-ramaswamy/chalk_mvp/internal/api/bookmark"
 	healthcheck_api "github.com/nihal-ramaswamy/chalk_mvp/internal/api/healthcheck"
-	rooms_api "github.com/nihal-ramaswamy/chalk_mvp/internal/api/rooms"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/constants"
-	"github.com/nihal-ramaswamy/chalk_mvp/internal/dto"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/interfaces"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
@@ -19,19 +16,16 @@ import (
 
 func NewRoutes(
 	server *gin.Engine,
-	upgrader *websocket.Upgrader,
 	log *zap.Logger,
 	db *sql.DB,
 	rdb_auth *redis.Client,
 	ctx context.Context,
 	rdb_ws *redis.Client,
-	roomDto *dto.Room,
 ) {
 	serverGroupHandlers := []interfaces.ServerGroupInterface{
 		healthcheck_api.NewHealthCheckGroup(db, rdb_auth, ctx, log),
 		auth_api.NewAuthGroup(db, rdb_auth, ctx, log),
-		rooms_api.NewRoomsApi(db, log, rdb_auth, ctx, roomDto),
-		chat_api.NewChatApi(db, rdb_auth, ctx, log, upgrader, rdb_ws, roomDto),
+		bookmark_api.NewBookmarkGroup(db, rdb_auth, ctx, log),
 	}
 
 	for _, serverGroupHandler := range serverGroupHandlers {

@@ -44,6 +44,8 @@ func (n *AddBookmarkHandler) Handler() gin.HandlerFunc {
 			return
 		}
 
+		n.log.Info("Debug: ", zap.String("email", email), zap.Any("bookmark ", addBookmarkStruct))
+
 		db.AppendEmailToBookmarks(n.db, email, addBookmarkStruct)
 	}
 }

@@ -20,8 +20,8 @@ type ViewBookmark struct {
 	middlewares []gin.HandlerFunc
 }
 
-func NewViewBookmark(pdb *sql.DB, rdb *redis.Client, ctx context.Context, log *zap.Logger) *AddBookmarkHandler {
-	return &AddBookmarkHandler{
+func NewViewBookmarkHandler(pdb *sql.DB, rdb *redis.Client, ctx context.Context, log *zap.Logger) *ViewBookmark {
+	return &ViewBookmark{
 		db:          pdb,
 		log:         log,
 		middlewares: []gin.HandlerFunc{auth_middleware.AuthMiddleware(pdb, rdb, ctx, log)},

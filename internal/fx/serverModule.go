@@ -6,9 +6,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 	serverconfig "github.com/nihal-ramaswamy/chalk_mvp/internal/config/server"
-	"github.com/nihal-ramaswamy/chalk_mvp/internal/dto"
 	middleware_log "github.com/nihal-ramaswamy/chalk_mvp/internal/middleware/log"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/routes"
 	"github.com/redis/go-redis/v9"
@@ -22,10 +20,8 @@ func newServerEngine(
 	rdb_ws *redis.Client,
 	config *serverconfig.Config,
 	log *zap.Logger,
-	upgrader *websocket.Upgrader,
 	db *sql.DB,
 	ctx context.Context,
-	roomDto *dto.Room,
 ) *gin.Engine {
 	gin.SetMode(config.GinMode)
 
@@ -34,7 +30,7 @@ func newServerEngine(
 	server.Use(middleware_log.DefaultStructuredLogger(log))
 	server.Use(gin.Recovery())
 
-	routes.NewRoutes(server, upgrader, log, db, rdb_auth, ctx, rdb_ws, roomDto)
+	routes.NewRoutes(server, log, db, rdb_auth, ctx, rdb_ws)
 
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
