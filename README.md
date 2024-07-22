@@ -1,5 +1,16 @@
 # Chalk MVP
 
+## Tech Stack
+- [Golang](https://go.dev/), [Gin](https://gin-gonic.com/), [fx](https://uber-go.github.io/fx/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Redis](https://redis.io/)
+- [Docker](https://www.docker.com/)
+
+## Set up and Running
+- Copy the contents of [`.env.example`](./.env.example) into `.env` file and update the contents to suit your requirements.
+- Next you can run the app using the [`docker-compose.yml`](./docker-compose.yml) file provided.
+- If you want to run the app without docker, the entry file is [main.go](./cmd/app/main.go)
+
 ## API Endpoints
 
 <details>
@@ -42,14 +53,14 @@
   ### StudentData 
   ```json
   {
-    name: string               
-    email: string              
-    password: string           
-    description?: string        
-    university?: string         
-    degree?: string             
-    skills?: string             
-    year_of_graduation?: string 
+    "name": "string",               
+    "email": "string",              
+    "password": "string",           
+    "description"?: "string",        
+    "university"?: "string",         
+    "degree"?: "string",             
+    "skills"?: "string",             
+    "year_of_graduation"?: "string"
   }
 ```
 </details>
@@ -74,11 +85,10 @@
   >|400|`No information`. Returned when server cannot process json|
 
   ### LoginData 
-
   ```json
   {
-    email: string              
-    password: string           
+    "email": "string",              
+    "password": "string"          
   }
 ```
 </details>
@@ -87,7 +97,7 @@
   <summary>
     <code>POST</code>
     <code>/auth/signout</code>
-    <code>Sign in with details</code>
+    <code>Sign out</code>
   </summary>
 
   ### Parameters
@@ -99,8 +109,65 @@
   >|http code|response|
   >|---------|--------|
   >|202|`{"message": ok}`|
-
 </details>
+
+<details>
+  <summary>
+    <code>POST</code>
+    <code>/bookmark/add</code>
+    <code>Bookmark another student</code>
+  </summary>
+
+  ### Parameters
+  >|name|type|data type|description|
+  >|----|----|---------|-----------|
+  >|Token|Header|String|Format: `Bearer <Token>`|
+  >|BookmarkData| Body|JSON|Student email you want to bookmark|
+
+
+  ### Responses
+  >|http code|response|
+  >|---------|--------|
+  >|202|`{"message": ok}`|
+  >|400|`No information`. Returned when server cannot process json|
+
+  ### BookmarkData 
+  ```json 
+  {
+    "student_email": "string
+  }
+```
+</details>
+
+<details>
+  <summary>
+    <code>POST</code>
+    <code>/bookmark/view</code>
+    <code>View another student's bookmarks</code>
+  </summary>
+
+  ### Parameters
+  >|name|type|data type|description|
+  >|----|----|---------|-----------|
+  >|Token|Header|String|Format: `Bearer <Token>`|
+  >|BookmarkData| Body|JSON|Student's bookmarks you want to see|
+
+
+  ### Responses
+  >|http code|response|
+  >|---------|--------|
+  >|202|`{"message": ok}`|
+  >|400|`No information`. Returned when server cannot process json|
+
+  ### BookmarkData 
+  ```json 
+  {
+    "student_email": "string
+  }
+```
+</details>
+
+
 
 
 ### TODO 

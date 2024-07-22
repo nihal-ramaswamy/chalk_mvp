@@ -53,7 +53,7 @@ func (n *AddBookmarkHandler) Handler() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"message": "Added bookmark"})
+		c.JSON(http.StatusAccepted, gin.H{"message": "ok"})
 	}
 }
 
