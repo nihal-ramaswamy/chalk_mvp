@@ -134,7 +134,7 @@
   ### BookmarkData 
   ```json 
   {
-    "student_email": "string
+    "student_email": "string"
   }
 ```
 </details>
@@ -162,7 +162,7 @@
   ### BookmarkData 
   ```json 
   {
-    "student_email": "string
+    "student_email": "string"
   }
 ```
 </details>
