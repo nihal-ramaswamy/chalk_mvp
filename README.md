@@ -39,8 +39,8 @@
   >|422|{"error": "User with email {email} already exists."}|
   >|400|`No information`. Returned when server cannot process json|
 
+  ### StudentData 
   ```json
-  StudentData 
   {
     name: string               
     email: string              
@@ -73,8 +73,9 @@
   >|401|{"error": "User with email {email} does not exist"} or {"error": "Invalid credentials"}|
   >|400|`No information`. Returned when server cannot process json|
 
+  ### LoginData 
+
   ```json
-  LoginData 
   {
     email: string              
     password: string           
