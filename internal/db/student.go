@@ -47,10 +47,6 @@ func GetStudentIdFromEmail(db *sql.DB, email string) (string, error) {
 // -----Queries -----
 
 func insertIntoStudent(db *sql.DB, user *dto.Student) (string, error) {
-	if db == nil {
-		panic("db cannot be nil")
-	}
-
 	var id string
 	query := `INSERT INTO "STUDENT" (NAME, EMAIL, PASSWORD, DESCRIPTION, YEAR_OF_GRADUATION, SKILLS, UNIVERSITY, DEGREE) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING ID`
 	err := db.QueryRow(query, user.Name, user.Email, user.Password, user.Description, user.YearOfGraduation, pq.StringArray(user.Skills), user.University, user.Degree).Scan(&id)
@@ -59,10 +55,6 @@ func insertIntoStudent(db *sql.DB, user *dto.Student) (string, error) {
 }
 
 func selectAllFromStudentWhereEmailIs(db *sql.DB, email string) (dto.Student, error) {
-	if db == nil {
-		panic("db cannot be nil")
-	}
-
 	var user dto.Student
 	query := `SELECT * FROM "STUDENT" WHERE EMAIL = $1`
 	err := db.QueryRow(query, email).Scan(&user)
@@ -74,9 +66,6 @@ func selectAllFromStudentWhereEmailIs(db *sql.DB, email string) (dto.Student, er
 }
 
 func selectPasswordFromStudentWhereEmailIDs(db *sql.DB, email string) (string, error) {
-	if db == nil {
-		panic("db cannot be nil")
-	}
 	var password string
 	query := `SELECT PASSWORD FROM "STUDENT" WHERE EMAIL = $1`
 	err := db.QueryRow(query, email).Scan(&password)

@@ -19,10 +19,6 @@ func GetBookmarksForUser(db *sql.DB, email string) ([]string, error) {
 
 // TODO: Use student IDs instead of email
 func updateBookmarksSetStudentEmailsArrayAppendWhereEmailIs(db *sql.DB, email string, addBookmark *dto.Bookmark) error {
-	if nil == db {
-		panic("db cannot be nil")
-	}
-
 	query := `SELECT COUNT(*) FROM "BOOKMARKS" WHERE EMAIL = $1`
 	var count int
 	err := db.QueryRow(query, email).Scan(&count)
@@ -42,10 +38,6 @@ func updateBookmarksSetStudentEmailsArrayAppendWhereEmailIs(db *sql.DB, email st
 }
 
 func selectStudentEmailsFromBookmarksWhereEmailIs(db *sql.DB, email string) ([]string, error) {
-	if nil == db {
-		panic("db cannot be nil")
-	}
-
 	query := `SELECT STUDENT_EMAILS FROM "BOOKMARKS" WHERE EMAIL = $1`
 	var bookmarks []string
 	err := db.QueryRow(query, email).Scan(pq.Array(&bookmarks))
