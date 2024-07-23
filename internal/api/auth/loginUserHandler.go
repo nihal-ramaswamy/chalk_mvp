@@ -45,27 +45,23 @@ func (l *LoginUserHandler) Handler() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		user := dto.NewStudent()
 		if err := c.ShouldBindJSON(&user); nil != err {
-			err := c.Error(err)
-			l.log.Info("Responding with error", zap.Error(err))
-			c.AbortWithStatus(http.StatusBadRequest)
+			utils.HandleErrorAndAbortWithError(c, err, l.log, http.StatusBadRequest)
+			return
 		}
 		if !db.DoesEmailExist(l.db, user.Email) {
-			c.JSON(http.StatusUnauthorized,
-				gin.H{"error": fmt.Sprintf("User with email %s does not exist", user.Email)})
+			utils.HandleErrorAndAbortWithError(c, fmt.Errorf("user with email %s does not exist", user.Email), l.log, http.StatusUnauthorized)
 			return
 		}
 
 		if !db.DoesPasswordMatch(l.db, user, l.log) {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid credentials"})
+			utils.HandleErrorAndAbortWithError(c, fmt.Errorf("invalid credentials"), l.log, http.StatusUnauthorized)
 			return
 		}
 
 		token, err := utils.GenerateToken(user)
 		if nil != err {
-			err := c.Error(err)
-			l.log.Info("Responding with error", zap.Error(err))
-
-			c.AbortWithStatus(http.StatusInternalServerError)
+			utils.HandleErrorAndAbortWithError(c, err, l.log, http.StatusInternalServerError)
+			return
 		}
 
 		l.rdb.Set(l.ctx, user.Email, token, constants.TOKEN_EXPIRY_TIME)

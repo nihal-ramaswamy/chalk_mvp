@@ -9,6 +9,7 @@ import (
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/constants"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/db"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/dto"
+	"github.com/nihal-ramaswamy/chalk_mvp/internal/utils"
 	"go.uber.org/zap"
 )
 
@@ -34,15 +35,12 @@ func (n *NewStudentHandler) Handler() gin.HandlerFunc {
 		student := dto.NewStudent()
 
 		if err := c.ShouldBindJSON(&student); err != nil {
-			err := c.Error(err)
-			n.log.Info("Responding with error", zap.Error(err))
-			c.AbortWithStatus(http.StatusBadRequest)
+			utils.HandleErrorAndAbortWithError(c, err, n.log, http.StatusBadRequest)
 			return
 		}
 
 		if db.DoesEmailExist(n.db, student.Email) {
-			c.JSON(http.StatusUnprocessableEntity,
-				gin.H{"error": fmt.Sprintf("User with email %s already exists", student.Email)})
+			utils.HandleErrorAndAbortWithError(c, fmt.Errorf("user with email %s already exists", student.Email), n.log, http.StatusUnprocessableEntity)
 			return
 		}
 
