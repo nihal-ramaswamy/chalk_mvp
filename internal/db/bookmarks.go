@@ -17,6 +17,7 @@ func GetBookmarksForUser(db *sql.DB, email string) ([]string, error) {
 
 // ----- Queries----
 
+// TODO: Use student IDs instead of email
 func updateBookmarksSetStudentEmailsArrayAppendWhereEmailIs(db *sql.DB, email string, addBookmark *dto.Bookmark) error {
 	if nil == db {
 		panic("db cannot be nil")

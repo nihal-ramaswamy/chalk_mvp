@@ -5,6 +5,7 @@ import (
 	"database/sql"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	auth_api "github.com/nihal-ramaswamy/chalk_mvp/internal/api/auth"
 	bookmark_api "github.com/nihal-ramaswamy/chalk_mvp/internal/api/bookmark"
 	healthcheck_api "github.com/nihal-ramaswamy/chalk_mvp/internal/api/healthcheck"
@@ -21,6 +22,7 @@ func NewRoutes(
 	rdb_auth *redis.Client,
 	ctx context.Context,
 	rdb_ws *redis.Client,
+	upgrader *websocket.Upgrader,
 ) {
 	serverGroupHandlers := []interfaces.ServerGroupInterface{
 		healthcheck_api.NewHealthCheckGroup(db, rdb_auth, ctx, log),

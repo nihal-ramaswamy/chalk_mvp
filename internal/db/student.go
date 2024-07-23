@@ -40,6 +40,10 @@ func GetUserFromEmail(db *sql.DB, email string) (dto.Student, error) {
 	return selectAllFromStudentWhereEmailIs(db, email)
 }
 
+func GetStudentIdFromEmail(db *sql.DB, email string) (string, error) {
+	return selectIdFromStudentWhereEmailIs(db, email)
+}
+
 // -----Queries -----
 
 func insertIntoStudent(db *sql.DB, user *dto.Student) (string, error) {
@@ -78,4 +82,11 @@ func selectPasswordFromStudentWhereEmailIDs(db *sql.DB, email string) (string, e
 	err := db.QueryRow(query, email).Scan(&password)
 
 	return password, err
+}
+
+func selectIdFromStudentWhereEmailIs(db *sql.DB, email string) (string, error) {
+	var id string
+	query := `SELECT ID FROM "STUDENT" WHERE EMAIL = $1`
+	err := db.QueryRow(query, email).Scan(&id)
+	return id, err
 }
