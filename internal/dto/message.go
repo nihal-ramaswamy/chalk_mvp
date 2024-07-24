@@ -3,8 +3,8 @@ package dto
 import "time"
 
 type Message struct {
-	SentAt        time.Time `json:"sent_at"`
-	SenderEmail   string    `json:"sender"`
+	SentAt        time.Time `json:"sent_at,omitempty"`
+	SenderEmail   string    `json:"sender,omitempty"`
 	ReceiverEmail string    `json:"receiver"`
 }
 

@@ -6,11 +6,11 @@ type Student struct {
 	Name             string   `json:"name"`
 	Email            string   `json:"email"`
 	Password         string   `json:"password"`
-	Description      string   `json:"description"`
-	University       string   `json:"university"`
-	Degree           string   `json:"degree"`
-	Skills           []string `json:"skills"`
-	YearOfGraduation int      `json:"year_of_graduation"`
+	Description      string   `json:"description,omitempty"`
+	University       string   `json:"university,omitempty"`
+	Degree           string   `json:"degree,omitempty"`
+	Skills           []string `json:"skills,omitempty"`
+	YearOfGraduation int      `json:"year_of_graduation,omitempty"`
 }
 
 func (u *Student) HashAndSalt() *Student {

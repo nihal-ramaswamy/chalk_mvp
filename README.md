@@ -122,7 +122,7 @@
   >|name|type|data type|description|
   >|----|----|---------|-----------|
   >|Token|Header|String|Format: `Bearer <Token>`|
-  >|BookmarkData| Body|JSON|Student email you want to bookmark|
+  >|BookmarkData| Body|JSON|Student email you want to bookmark. This also creates a code for a room which can later be used to send messages in|
 
 
   ### Responses
