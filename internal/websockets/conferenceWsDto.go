@@ -3,9 +3,9 @@ package websockets_impl
 import (
 	"database/sql"
 	"sync"
-	"time"
 
 	"github.com/gorilla/websocket"
+	"github.com/nihal-ramaswamy/chalk_mvp/internal/db"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/dto"
 	"go.uber.org/zap"
 )
@@ -38,11 +38,11 @@ func (c *ConferenceWsDto) RemoveConnection(connWithId *dto.ConnWithId) {
 	connWithId.Conn.Close()
 }
 
-func (c *ConferenceWsDto) HandleWs(connWithId *dto.ConnWithId) {
-	c.readLoop(connWithId)
+func (c *ConferenceWsDto) HandleWs(connWithId *dto.ConnWithId, code string) {
+	c.readLoop(connWithId, code)
 }
 
-func (c *ConferenceWsDto) readLoop(connWithId *dto.ConnWithId) {
+func (c *ConferenceWsDto) readLoop(connWithId *dto.ConnWithId, code string) {
 	var message dto.Message
 
 	for {
@@ -57,7 +57,9 @@ func (c *ConferenceWsDto) readLoop(connWithId *dto.ConnWithId) {
 		}
 
 		message.SenderId = connWithId.ID
-		message.SentAt = time.Now()
+		message.ChatCode = code
+
+		db.SaveChatToDb(c.db, message)
 
 		c.broadcast(message)
 	}

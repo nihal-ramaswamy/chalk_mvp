@@ -37,5 +37,5 @@ func (r *Room) AddConnection(code string, connWithId *dto.ConnWithId) {
 }
 
 func (r *Room) HandleWs(code string, connWithId *dto.ConnWithId) {
-	r.room[code].HandleWs(connWithId)
+	r.room[code].HandleWs(connWithId, code)
 }
