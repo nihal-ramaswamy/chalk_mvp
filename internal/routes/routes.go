@@ -12,8 +12,8 @@ import (
 	healthcheck_api "github.com/nihal-ramaswamy/chalk_mvp/internal/api/healthcheck"
 	rooms_api "github.com/nihal-ramaswamy/chalk_mvp/internal/api/rooms"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/constants"
-	"github.com/nihal-ramaswamy/chalk_mvp/internal/dto"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/interfaces"
+	websockets_impl "github.com/nihal-ramaswamy/chalk_mvp/internal/websockets"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 )
@@ -26,7 +26,7 @@ func NewRoutes(
 	ctx context.Context,
 	rdb_ws *redis.Client,
 	upgrader *websocket.Upgrader,
-	roomDto *dto.Room,
+	roomDto *websockets_impl.Room,
 ) {
 	serverGroupHandlers := []interfaces.ServerGroupInterface{
 		healthcheck_api.NewHealthCheckGroup(db, rdb_auth, ctx, log),

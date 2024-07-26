@@ -9,17 +9,18 @@ import (
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/db"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/dto"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/utils"
+	websockets_impl "github.com/nihal-ramaswamy/chalk_mvp/internal/websockets"
 	"go.uber.org/zap"
 )
 
 type CreateRoomHandler struct {
 	db          *sql.DB
 	log         *zap.Logger
-	roomDto     *dto.Room
+	roomDto     *websockets_impl.Room
 	middlewares []gin.HandlerFunc
 }
 
-func NewCreateRoomHandler(db *sql.DB, log *zap.Logger, roomDto *dto.Room) *CreateRoomHandler {
+func NewCreateRoomHandler(db *sql.DB, log *zap.Logger, roomDto *websockets_impl.Room) *CreateRoomHandler {
 	return &CreateRoomHandler{
 		db:          db,
 		log:         log,
@@ -69,7 +70,7 @@ func (c *CreateRoomHandler) Handler() gin.HandlerFunc {
 			return
 		}
 
-		c.roomDto.AddRoom(code)
+		c.roomDto.AddRoom(code, c.db)
 
 		ctx.JSON(http.StatusOK, gin.H{
 			"code": code,

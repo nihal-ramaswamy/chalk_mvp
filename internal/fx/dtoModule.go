@@ -1,11 +1,11 @@
 package fx_utils
 
 import (
-	"github.com/nihal-ramaswamy/chalk_mvp/internal/dto"
+	websockets_impl "github.com/nihal-ramaswamy/chalk_mvp/internal/websockets"
 	"go.uber.org/fx"
 )
 
 var DtoModule = fx.Module(
 	"DtoModule",
-	fx.Provide(dto.NewRoom),
+	fx.Provide(websockets_impl.NewRoom),
 )

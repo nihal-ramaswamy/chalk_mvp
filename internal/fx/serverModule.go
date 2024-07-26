@@ -8,9 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	serverconfig "github.com/nihal-ramaswamy/chalk_mvp/internal/config/server"
-	"github.com/nihal-ramaswamy/chalk_mvp/internal/dto"
 	middleware_log "github.com/nihal-ramaswamy/chalk_mvp/internal/middleware/log"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/routes"
+	websockets_impl "github.com/nihal-ramaswamy/chalk_mvp/internal/websockets"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
@@ -25,7 +25,7 @@ func newServerEngine(
 	upgrader *websocket.Upgrader,
 	db *sql.DB,
 	ctx context.Context,
-	roomDto *dto.Room,
+	roomDto *websockets_impl.Room,
 ) *gin.Engine {
 	gin.SetMode(config.GinMode)
 

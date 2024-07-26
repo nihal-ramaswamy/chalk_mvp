@@ -6,9 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"github.com/nihal-ramaswamy/chalk_mvp/internal/dto"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/interfaces"
 	auth_middleware "github.com/nihal-ramaswamy/chalk_mvp/internal/middleware/auth"
+	websockets_impl "github.com/nihal-ramaswamy/chalk_mvp/internal/websockets"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 )
@@ -25,10 +25,10 @@ func NewChatApi(
 	log *zap.Logger,
 	upgrader *websocket.Upgrader,
 	rdb_ws *redis.Client,
-	roomDto *dto.Room,
+	roomDto *websockets_impl.Room,
 ) *ChatApi {
 	handlers := []interfaces.HandlerInterface{
-		NewChatHandler(upgrader, log, rdb_ws, ctx, roomDto),
+		NewChatHandler(upgrader, log, rdb_ws, ctx, roomDto, pdb),
 	}
 
 	return &ChatApi{

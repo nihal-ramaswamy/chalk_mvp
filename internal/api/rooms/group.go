@@ -5,9 +5,9 @@ import (
 	"database/sql"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nihal-ramaswamy/chalk_mvp/internal/dto"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/interfaces"
 	auth_middleware "github.com/nihal-ramaswamy/chalk_mvp/internal/middleware/auth"
+	websockets_impl "github.com/nihal-ramaswamy/chalk_mvp/internal/websockets"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 )
@@ -25,7 +25,13 @@ func (h *RoomsApi) RouteHandlers() []interfaces.HandlerInterface {
 	return h.routeHandlers
 }
 
-func NewRoomsApi(db *sql.DB, log *zap.Logger, rdb_auth *redis.Client, ctx context.Context, roomDto *dto.Room) *RoomsApi {
+func NewRoomsApi(
+	db *sql.DB,
+	log *zap.Logger,
+	rdb_auth *redis.Client,
+	ctx context.Context,
+	roomDto *websockets_impl.Room,
+) *RoomsApi {
 	handlers := []interfaces.HandlerInterface{
 		NewCreateRoomHandler(db, log, roomDto),
 	}
