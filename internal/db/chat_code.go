@@ -19,6 +19,20 @@ func GetCode(db *sql.DB, id1, id2 string) (string, error) {
 	return selectCodeFromChatCodeWhereId1IsAndId2Is(db, id1, id2)
 }
 
+func IsStudentAuthorizedToViewChat(db *sql.DB, id, code string) (bool, error) {
+	ok, err := selectCountFromChatCodeWhereExistsSelectCodeFromChatCodeWhereCodeIsAndId1Is(db, id, code)
+	if nil != err {
+		return false, err
+	}
+
+	if ok {
+		return ok, nil
+	}
+
+	ok, err = selectCountFromChatCodeWhereExistsSelectCodeFromChatCodeWhereCodeIsAndId2Is(db, id, code)
+	return ok, err
+}
+
 // ---- Queries ----
 func insertIntoChatCode(db *sql.DB, id1, id2, code string) error {
 	if id1 < id2 {
@@ -69,4 +83,18 @@ func selectCodeFromChatCodeWhereId1IsAndId2Is(db *sql.DB, id1, id2 string) (stri
 	}
 
 	return "", fmt.Errorf("error fetching code")
+}
+
+func selectCountFromChatCodeWhereExistsSelectCodeFromChatCodeWhereCodeIsAndId1Is(db *sql.DB, id, code string) (bool, error) {
+	query := `SELECT COUNT(*) FROM "CHAT_CODE" WHERE CODE = $1 AND ID1 = $2`
+	var count int
+	err := db.QueryRow(query, code, id).Scan(&count)
+	return count > 0, err
+}
+
+func selectCountFromChatCodeWhereExistsSelectCodeFromChatCodeWhereCodeIsAndId2Is(db *sql.DB, id, code string) (bool, error) {
+	query := `SELECT COUNT(*) FROM "CHAT_CODE" WHERE CODE = $1 AND ID2 = $2`
+	var count int
+	err := db.QueryRow(query, code, id).Scan(&count)
+	return count > 0, err
 }

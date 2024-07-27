@@ -28,7 +28,8 @@ func NewChatApi(
 	roomDto *websockets_impl.Room,
 ) *ChatApi {
 	handlers := []interfaces.HandlerInterface{
-		NewChatHandler(upgrader, log, rdb_ws, ctx, roomDto, pdb),
+		NewChatHandler(upgrader, log, rdb_ws, rdb_auth, ctx, roomDto, pdb),
+		NewChatViewHandler(pdb, log, rdb_auth, ctx),
 	}
 
 	return &ChatApi{
