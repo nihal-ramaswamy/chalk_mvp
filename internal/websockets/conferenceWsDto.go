@@ -59,7 +59,11 @@ func (c *ConferenceWsDto) readLoop(connWithId *dto.ConnWithId, code string) {
 		message.SenderId = connWithId.ID
 		message.ChatCode = code
 
-		db.SaveChatToDb(c.db, message)
+		err = db.SaveChatToDb(c.db, message)
+
+		if nil != err {
+			c.log.Error("error saving chat", zap.Error(err))
+		}
 
 		c.broadcast(message)
 	}
