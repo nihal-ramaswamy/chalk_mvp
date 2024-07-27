@@ -11,6 +11,7 @@ import (
 	chat_api "github.com/nihal-ramaswamy/chalk_mvp/internal/api/chat"
 	healthcheck_api "github.com/nihal-ramaswamy/chalk_mvp/internal/api/healthcheck"
 	rooms_api "github.com/nihal-ramaswamy/chalk_mvp/internal/api/rooms"
+	skills_api "github.com/nihal-ramaswamy/chalk_mvp/internal/api/skills"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/constants"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/interfaces"
 	websockets_impl "github.com/nihal-ramaswamy/chalk_mvp/internal/websockets"
@@ -34,6 +35,7 @@ func NewRoutes(
 		rooms_api.NewRoomsApi(db, log, rdb_auth, ctx, roomDto),
 		chat_api.NewChatApi(db, rdb_auth, ctx, log, upgrader, rdb_ws, roomDto),
 		bookmark_api.NewBookmarkGroup(db, rdb_auth, ctx, log),
+		skills_api.NewChatApi(db, log),
 	}
 
 	for _, serverGroupHandler := range serverGroupHandlers {

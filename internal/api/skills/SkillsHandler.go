@@ -1,7 +1,6 @@
 package skills_api
 
 import (
-	"context"
 	"database/sql"
 	"net/http"
 
@@ -21,9 +20,8 @@ type SkillsHandler struct {
 func NewSkillsHandler(
 	db *sql.DB,
 	log *zap.Logger,
-	ctx context.Context,
-) *AllSkillsHandler {
-	return &AllSkillsHandler{
+) *SkillsHandler {
+	return &SkillsHandler{
 		db:          db,
 		log:         log,
 		middlewares: []gin.HandlerFunc{},

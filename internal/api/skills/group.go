@@ -1,14 +1,10 @@
 package skills_api
 
 import (
-	"context"
 	"database/sql"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gorilla/websocket"
 	"github.com/nihal-ramaswamy/chalk_mvp/internal/interfaces"
-	websockets_impl "github.com/nihal-ramaswamy/chalk_mvp/internal/websockets"
-	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 )
 
@@ -19,14 +15,12 @@ type SkillsApi struct {
 
 func NewChatApi(
 	pdb *sql.DB,
-	rdb_auth *redis.Client,
-	ctx context.Context,
 	log *zap.Logger,
-	upgrader *websocket.Upgrader,
-	rdb_ws *redis.Client,
-	roomDto *websockets_impl.Room,
 ) *SkillsApi {
-	handlers := []interfaces.HandlerInterface{}
+	handlers := []interfaces.HandlerInterface{
+		NewAllSkillsHandler(pdb, log),
+		NewSkillsHandler(pdb, log),
+	}
 
 	return &SkillsApi{
 		middlewares:   []gin.HandlerFunc{},
