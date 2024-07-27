@@ -7,7 +7,7 @@ import (
 
 func HandleErrorAndAbortWithError(ctx *gin.Context, err error, log *zap.Logger, code int) {
 	if nil != err {
-		ctx.Error(err)
+		_ = ctx.Error(err)
 		log.Error("responding with error", zap.Error(err))
 		_ = ctx.AbortWithError(code, err)
 	}
